@@ -1,0 +1,38 @@
+---
+title: "P8130_BM_HW1"
+author: "JingYao GEng"
+date: "9/24/2020"
+output: github_document
+---
+```{r setup}
+# Clean all objects from the current workspace (R memory) 
+rm(list = ls())
+
+# load library
+library(arsenal)
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+```
+
+## Problem 1
+
+```{r import data}
+Antibodies = read_csv(file = "./Antibodies.csv")
+```
+
+#### 1. a)
+
+
+
+
+#### 1. b)
+
+
+
+## Problem 2
+
+#### 2. a)
+
+
+#### 2. b)
