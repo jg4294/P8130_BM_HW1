@@ -1,10 +1,11 @@
 ---
-title: "P8130_BM_HW1"
-author: "JingYao GEng"
+title: "Biostatistical Methods I - HW1"
+author: "JingYao Geng"
+
 date: "9/24/2020"
 output: github_document
 ---
-```{r setup}
+```{r setup, message = FALSE}
 # Clean all objects from the current workspace (R memory) 
 rm(list = ls())
 
@@ -17,16 +18,69 @@ library(tidyverse)
 
 ## Problem 1
 
-```{r import data}
+```{r import data, message = FALSE}
+# Import data
 Antibodies = read_csv(file = "./Antibodies.csv")
 ```
 
-#### 1. a)
+#### 1. a) Descriptive Statistics:
+
+* The **Antibodies** data set contains a total of **1491** observations and **5** variables. 
+  * **1224** missing values are founded in variable called **Antibody_IgM**. 
+  * **34** observations of variable **Smell** are categorized as  "Unanswered/others". 
+  * The rest of variables: **Subject**, **AgeCategory**,  and **Gender**  contain no missing values.
+
+* The following table shows the **descriptive statistics** for all the variable of interest.
+  * **Numeric variable: Subject, Antibody_IgM**
+  * **Categorical variable: AgeCategory, Gender, Smell**
+
+```{r descriptive statistics, message = FALSE, collapse = FALSE}
+# Change variable names/labels
+my_labels <- list(AgeCategory = "Age", Antibody_IgM = "Antibody(IgM)", Smell = "Smell", Gender = "Gender")
+
+# Clean the output
+my_controls <- tableby.control(
+  total = T,
+  test = F,  # No test p-values yet
+  numeric.stats = c("meansd", "medianq1q3", "range", "Nmiss2"),
+  cat.stats = c("countpct", "Nmiss2"), 
+  stats.labels = list(
+    meansd = "Mean (SD)",
+    medianq1q3 = "Median (Q1, Q3)",
+    range = "Min - Max",
+    Nmiss2 = "Missing",
+    countpct = "N (%)"))
+
+tab1 <- tableby( ~ Subject + Antibody_IgM + AgeCategory + Smell + Gender, data = Antibodies, control = my_controls)
+
+#Descriptive Statistics:
+summary(tab1, title = "Descriptive Statistics: Antibodies Data", text = T, labelTranslations = my_labels)
+
+
+```
 
 
 
+#### 1. b) Histgram for the Ig_M values
 
-#### 1. b)
+The histgram of Antibody_IgM shows a right skewed distribution, where the mean of the Antibodies_IgM level tends to be 'pulled' toward the right tail of the distribution.
+
+```{r choose bars, message = FALSE, collapse = TRUE}
+# Choose the number of bars/breaks to use for the histogram
+
+min(Antibodies$Antibody_IgM, na.rm = TRUE) # 0.048
+max(Antibodies$Antibody_IgM, na.rm = TRUE) #1.0475
+
+```
+
+```{r histgram-IgM, message = FALSE}
+# the shape of Ig_M values looks like a reight-skewd distribution
+ggplot(Antibodies, aes(x = Antibody_IgM)) +
+  geom_histogram(col = "black", fill = "pink", breaks = seq(0.00,1.20, 0.02)) +                      
+  #geom_vline(aes(xintercept = mean(Antibodies$Antibodies_IgM, na.rm = T)), color = "red", linetype = "dashed", size = 2) +  
+  labs(title = "Histogram of Antibodies_IgM Level") +                                              
+  labs(x = "Antibody IgM", y = "Count")
+```
 
 
 
