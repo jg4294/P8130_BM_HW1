@@ -5,7 +5,7 @@ author: "JingYao Geng"
 date: "9/24/2020"
 output: github_document
 ---
-```{r setup, message = FALSE}
+```{r setup, message = FALSE, warning = FALSE, echo = FALSE}
 # Clean all objects from the current workspace (R memory) 
 rm(list = ls())
 
@@ -18,12 +18,12 @@ library(tidyverse)
 
 ## Problem 1
 
-```{r import data, message = FALSE}
+```{r import data, message = FALSE, warning = FALSE, echo = FALSE}
 # Import data
 Antibodies = read_csv(file = "./Antibodies.csv")
 ```
 
-#### 1.1.a  Descriptive Statistics:
+#### 1.1.a: Descriptive Statistics
 
 * The **Antibodies** data set contains a total of **1491** observations and **5** variables. 
   * **1224** missing values are founded in variable called **Antibody_IgM**. 
@@ -34,7 +34,7 @@ Antibodies = read_csv(file = "./Antibodies.csv")
   * **Numeric variable: Subject, Antibody_IgM**
   * **Categorical variable: AgeCategory, Gender, Smell**
 
-```{r descriptive statistics, message = FALSE, collapse = FALSE}
+```{r descriptive statistics, message = FALSE, collapse = FALSE, warning = FALSE, echo = FALSE}
 # Change variable names/labels
 my_labels <- list(AgeCategory = "Age", Antibody_IgM = "Antibody(IgM)", Smell = "Smell", Gender = "Gender")
 
@@ -61,19 +61,19 @@ summary(tab1, title = "Descriptive Statistics: Antibodies Data", text = T, label
 
 
 
-#### 1.1.b  Histogram for the Ig_M values
+#### 1.1.b:  Histogram for the Ig_M values
 
 The histogram of Antibody_IgM shows a right skewed distribution, where the mean of the Antibodies_IgM level tends to be 'pulled' toward the right tail of the distribution.
 
-```{r choose bars, message = FALSE, collapse = TRUE}
+```{r choose bars, message = FALSE, collapse = TRUE, warning = FALSE, echo = FALSE}
 # Choose the number of bars/breaks to use for the histogram
 
-min(Antibodies$Antibody_IgM, na.rm = TRUE) # 0.048
-max(Antibodies$Antibody_IgM, na.rm = TRUE) #1.0475
+#min(Antibodies$Antibody_IgM, na.rm = TRUE) # 0.048
+#max(Antibodies$Antibody_IgM, na.rm = TRUE) #1.0475
 
 ```
 
-```{r histgram-IgM, message = FALSE}
+```{r histgram-IgM, message = FALSE, warning = FALSE, echo = FALSE}
 # the shape of Ig_M values looks like a reight-skewd distribution
 ggplot(Antibodies, aes(x = Antibody_IgM)) +
   geom_histogram(col = "black", fill = "pink", breaks = seq(0.00,1.20, 0.02)) +                      
@@ -82,16 +82,15 @@ ggplot(Antibodies, aes(x = Antibody_IgM)) +
   labs(x = "Antibody IgM", y = "Count")
 ```
 
-#### 1.2.a  Descriptive Statistics Stratified by Smell
+#### 1.2.a:  Descriptive Statistics Stratified by Smell
 
 * There are more observations in the Altered collection of Smell, regardless the variable Age, Gender, and Antibody_IgM.
 * The normal group of Semll is more evenly distributed in gender than the altered group.
 * Age range 31-50 contributes more than 50% of the observations in both normal and altered groups.
 
-```{r stratified by smell, message = FALSE, collapse = TRUE}
+```{r stratified by smell, message = FALSE, collapse = TRUE, warning = FALSE, echo = FALSE}
 # filter variable 'Smell' with outcomes "Altered" and "Normal"
 Antibodies_Smell = filter(Antibodies, Smell == c("Altered", "Normal"))
-Antibodies_Smell
 
 # Tabulation by Smell categories
 tab2 = tableby( Smell ~ AgeCategory + Gender + Antibody_IgM, data = Antibodies_Smell, control = my_controls)
@@ -100,13 +99,11 @@ summary(tab2, title = "Descriptive Statistics Stratified by Smell", labelTransla
 ```
 
 
-#### 1.2.b  Group Boxplots and Side-by-side Histogram
+#### 1.2.b:  Group Boxplots and Side-by-side Histogram
 
-* Both normal and altered boxes contain missing values.
-* The mean of normal group is slightly higher than the altered group.
-* The range of both groups are overlapped a lot. 
+**Boxplots**:
 
-```{r boxplots, message = FALSE}
+```{r boxplots, echo = FALSE, message = FALSE, warning = FALSE}
 # A grouped boxplot
 ggplot(Antibodies_Smell, aes(x = Antibody_IgM, fill = Smell)) +
   geom_boxplot(outlier.colour = "black", outlier.shape = 20,
@@ -120,10 +117,13 @@ ggplot(Antibodies_Smell, aes(x = Antibody_IgM, fill = Smell)) +
   
 ```
 
-* Both Altered and Normal groups display a right skewed distribution overall. With the increase of Antibody_IgM level, the number of observations decrease for both groups.
-* There are more observations in the altered group.
+* Both normal and altered boxes contain missing values.
+* The mean of normal group is slightly higher than the altered group.
+* The range of both groups are overlapped a lot. 
 
-```{r side by side histgrams, message = FALSE}
+**Histogram**:
+
+```{r side by side histgrams, message = FALSE, warning = FALSE, echo = FALSE}
 # Overlaid histograms
 # Histogram of Igm by smell categories 'Normal' and 'Altered'.
 
@@ -135,4 +135,7 @@ ggplot(Antibodies_Smell, aes(x = Antibodies_Smell$Antibody_IgM, fill = factor(Sm
   scale_fill_discrete(name = "Smell Category", labels = c("Altered", "Normal"))  
 
 ```
+
+* Both Altered and Normal groups display a right skewed distribution overall. With the increase of Antibody_IgM level, the number of observations decrease for both groups.
+* There are more observations in the altered group.
 
